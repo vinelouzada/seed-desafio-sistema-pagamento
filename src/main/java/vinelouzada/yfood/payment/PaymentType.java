@@ -25,6 +25,10 @@ public enum PaymentType {
         return modePay.toString();
     }
 
+    public boolean isModePayOffline() {
+        return modePay == ModePay.OFFLINE;
+    }
+
     private enum ModePay{
         ONLINE,
         OFFLINE,

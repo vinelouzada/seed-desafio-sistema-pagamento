@@ -2,8 +2,11 @@ package vinelouzada.yfood.user;
 
 import jakarta.persistence.*;
 import vinelouzada.yfood.payment.PaymentType;
+import vinelouzada.yfood.payment.validators.PaymentValidator;
+import vinelouzada.yfood.restaurant.Restaurant;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -32,5 +35,16 @@ public class User {
 
     public Set<PaymentType> getPaymentTypes() {
         return paymentTypes;
+    }
+
+    public Set<PaymentType> filterPossiblePaymentTypes(Restaurant restaurant, Set<PaymentValidator>  paymentValidators) {
+        return paymentTypes.stream()
+                .filter(restaurant::acceptsPaymentType)
+                .filter(type -> paymentValidators.stream().allMatch(paymentValidator -> paymentValidator.isValid(type, this)))
+                .collect(Collectors.toSet());
+    }
+
+    public String getEmail() {
+        return email;
     }
 }
