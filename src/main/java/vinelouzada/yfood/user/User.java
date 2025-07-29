@@ -44,6 +44,10 @@ public class User {
                 .collect(Collectors.toSet());
     }
 
+    public boolean acceptsPaymentType(PaymentType paymentType) {
+        return paymentTypes.contains(paymentType);
+    }
+
     public String getEmail() {
         return email;
     }
