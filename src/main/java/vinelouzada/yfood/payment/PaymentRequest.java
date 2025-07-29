@@ -22,6 +22,6 @@ public record PaymentRequest(
         if (!paymentType.isModePayOffline())
             throw new IllegalStateException("Payment type must be offline");
 
-        return new Payment(paymentType, Set.of(new Transaction(TransactionStatus.WAITING)), order.total(), restaurant, user, order.orderId(), LocalDateTime.now());
+        return new Payment(paymentType, Set.of(new Transaction(TransactionStatus.WAITING)), order.total(), restaurant, user, LocalDateTime.now());
     }
 }

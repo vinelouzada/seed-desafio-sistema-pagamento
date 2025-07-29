@@ -7,6 +7,7 @@ import vinelouzada.yfood.user.User;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "payments")
@@ -14,7 +15,7 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String externalOrderId;
+    private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -36,13 +37,13 @@ public class Payment {
     @Deprecated
     public Payment() {}
 
-    public Payment(PaymentType paymentType, Set<Transaction> transactions, BigDecimal total, Restaurant restaurant, User user, String externalOrderId, LocalDateTime createdAt) {
+    public Payment(PaymentType paymentType, Set<Transaction> transactions, BigDecimal total, Restaurant restaurant, User user, LocalDateTime createdAt) {
         this.paymentType = paymentType;
         this.transactions = transactions;
         this.total = total;
         this.restaurant = restaurant;
         this.user = user;
-        this.externalOrderId = externalOrderId;
+        this.code = UUID.randomUUID().toString();
         this.createdAt = createdAt;
     }
 
@@ -50,8 +51,8 @@ public class Payment {
         return id;
     }
 
-    public String getExternalOrderId() {
-        return externalOrderId;
+    public String getCode() {
+        return code;
     }
 
     public User getUser() {
@@ -76,5 +77,9 @@ public class Payment {
 
     public Set<Transaction> getTransactions() {
         return transactions;
+    }
+
+    public void finish() {
+        transactions.add(new Transaction(TransactionStatus.OK));
     }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import vinelouzada.yfood.payment.dto.PaymentAvailable;
 import vinelouzada.yfood.payment.integration.order.OrderClient;
@@ -49,6 +50,16 @@ public class PaymentController {
         Payment payment = paymentRepository.save(paymentRequest.toPaymentOffline(user, restaurant, orderClientResponse));
 
         return ResponseEntity.ok().body(payment.getId());
+    }
+
+    @Transactional
+    @PostMapping("/payment/offline/{code}/finish")
+    public ResponseEntity<?> finishPayment(@PathVariable String code) {
+        Payment payment = paymentRepository.findByCode(code)
+                .orElseThrow(EntityNotFoundException::new);
+
+        payment.finish();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/payment/user/{userId}/restaurant/{restaurantId}")
