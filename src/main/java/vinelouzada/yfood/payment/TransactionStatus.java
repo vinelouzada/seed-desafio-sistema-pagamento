@@ -1,6 +1,6 @@
 package vinelouzada.yfood.payment;
 
-public enum PaymentStatus {
+public enum TransactionStatus {
     OK,
     WAITING
 }

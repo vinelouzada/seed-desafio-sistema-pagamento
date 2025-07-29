@@ -6,6 +6,7 @@ import vinelouzada.yfood.restaurant.Restaurant;
 import vinelouzada.yfood.user.User;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 public record PaymentRequest(
         @NotNull
@@ -21,6 +22,6 @@ public record PaymentRequest(
         if (!paymentType.isModePayOffline())
             throw new IllegalStateException("Payment type must be offline");
 
-        return new Payment(paymentType, PaymentStatus.WAITING, order.total(), restaurant, user, order.orderId(), LocalDateTime.now());
+        return new Payment(paymentType, Set.of(new Transaction(TransactionStatus.WAITING)), order.total(), restaurant, user, order.orderId(), LocalDateTime.now());
     }
 }

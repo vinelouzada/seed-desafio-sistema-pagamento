@@ -6,6 +6,7 @@ import vinelouzada.yfood.user.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "payments")
@@ -20,19 +21,24 @@ public class Payment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Restaurant restaurant;
 
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
+            name = "payment_transactions",
+            joinColumns = @JoinColumn(name = "payment_id")
+    )
+    private Set<Transaction> transactions;
+
     private BigDecimal total;
     private LocalDateTime createdAt;
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
-    @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus;
 
     @Deprecated
     public Payment() {}
 
-    public Payment(PaymentType paymentType, PaymentStatus paymentStatus, BigDecimal total, Restaurant restaurant, User user, String externalOrderId, LocalDateTime createdAt) {
+    public Payment(PaymentType paymentType, Set<Transaction> transactions, BigDecimal total, Restaurant restaurant, User user, String externalOrderId, LocalDateTime createdAt) {
         this.paymentType = paymentType;
-        this.paymentStatus = paymentStatus;
+        this.transactions = transactions;
         this.total = total;
         this.restaurant = restaurant;
         this.user = user;
@@ -68,7 +74,7 @@ public class Payment {
         return paymentType;
     }
 
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
+    public Set<Transaction> getTransactions() {
+        return transactions;
     }
 }
